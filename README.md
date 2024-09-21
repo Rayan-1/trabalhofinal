@@ -1,6 +1,3 @@
-Aqui está o conteúdo que você pode adicionar ao seu README para documentar o **Simulated Annealing aplicado ao Problema do Caixeiro Viajante (TSP)**:
-
----
 
 # Algoritmo Simulated Annealing aplicado ao Problema do Caixeiro Viajante (TSP)
 
@@ -127,7 +124,3 @@ Ao final, a melhor rota encontrada e a distância mínima obtida são exibidas.
 print(f"Melhor rota encontrada: {best_route}")
 print(f"Menor distância obtida: {best_cost:.2f}")
 ```
-
----
-
-Este conteúdo pode ser adicionado ao arquivo README.md no seu repositório para documentar de maneira completa a implementação do algoritmo.
