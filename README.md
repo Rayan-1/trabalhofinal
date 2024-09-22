@@ -28,7 +28,6 @@ A função `def calcular_distancia_total(rota, cidades)` recebe uma rota (uma li
 def calcular_distancia_total(rota, cidades):
     distancia_total = 0
     for i in range(len(rota)):
-        # Soma as distâncias entre cidades consecutivas
         distancia_total += calcular_distancia(cidades[rota[i]], cidades[rota[(i + 1) % len(rota)]])
     return distancia_total
 ```
