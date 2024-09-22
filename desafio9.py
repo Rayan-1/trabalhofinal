@@ -2,74 +2,74 @@ import random
 import math
 
 # Função para calcular a distância entre duas cidades usando a fórmula da distância euclidiana
-def distance(city1, city2):
-    return math.sqrt((city1[0] - city2[0])**2 + (city1[1] - city2[1])**2)
+def calcular_distancia(cidade1, cidade2):
+    return math.sqrt((cidade1[0] - cidade2[0])**2 + (cidade1[1] - cidade2[1])**2)
 
 # Função que calcula a distância total de uma rota (solução)
-def total_distance(route, cities):
-    dist = 0
-    for i in range(len(route)):
+def calcular_distancia_total(rota, cidades):
+    distancia_total = 0
+    for i in range(len(rota)):
         # Soma as distâncias entre cidades consecutivas
-        dist += distance(cities[route[i]], cities[route[(i + 1) % len(route)]])
-    return dist
+        distancia_total += calcular_distancia(cidades[rota[i]], cidades[rota[(i + 1) % len(rota)]])
+    return distancia_total
 
 # Gera uma solução inicial aleatória
-def generate_initial_solution(n):
-    solution = list(range(n))  # Lista com as cidades (0, 1, 2, ..., n-1)
-    random.shuffle(solution)   # Embaralha as cidades para criar uma rota inicial
-    return solution
+def gerar_solucao_inicial(n):
+    solucao = list(range(n))  # Lista com as cidades (0, 1, 2, ..., n-1)
+    random.shuffle(solucao)   # Embaralha as cidades para criar uma rota inicial
+    return solucao
 
 # Perturba a solução (gera uma solução vizinha) trocando duas cidades aleatoriamente
-def perturb_solution(solution):
-    new_solution = solution[:]  # Copia a solução atual
-    i, j = random.sample(range(len(solution)), 2)  # Escolhe duas cidades aleatórias
-    new_solution[i], new_solution[j] = new_solution[j], new_solution[i]  # Troca as cidades de posição
-    return new_solution
+def perturbar_solucao(solucao):
+    nova_solucao = solucao[:]  # Copia a solução atual
+    i, j = random.sample(range(len(solucao)), 2)  # Escolhe duas cidades aleatórias
+    nova_solucao[i], nova_solucao[j] = nova_solucao[j], nova_solucao[i]  # Troca as cidades de posição
+    return nova_solucao
 
 # Função de aceitação probabilística baseada na temperatura
-def acceptance_probability(current_cost, new_cost, temperature):
-    if new_cost < current_cost:
+def probabilidade_aceitacao(custo_atual, novo_custo, temperatura):
+    if novo_custo < custo_atual:
         return 1.0  # Se a nova solução for melhor, aceitamos diretamente
-    return math.exp((current_cost - new_cost) / temperature)  # Se for pior, aceitamos com uma certa probabilidade
+    return math.exp((custo_atual - novo_custo) / temperatura)  # Se for pior, aceitamos com uma certa probabilidade
 
 # Algoritmo de Simulated Annealing para o problema do Caixeiro Viajante
-def simulated_annealing(cities, initial_temp, cooling_rate, num_iterations):
-    current_solution = generate_initial_solution(len(cities))  # Gera uma solução inicial
-    current_cost = total_distance(current_solution, cities)  # Calcula o custo da solução inicial
-    best_solution = current_solution[:]  # Inicialmente, a melhor solução é a atual
-    best_cost = current_cost
-    temperature = initial_temp  # Define a temperatura inicial
+def caixeiro_viajante_sa(cidades, temperatura_inicial, taxa_resfriamento, iteracoes):
+    solucao_atual = gerar_solucao_inicial(len(cidades))  # Gera uma solução inicial
+    custo_atual = calcular_distancia_total(solucao_atual, cidades)  # Calcula o custo da solução inicial
+    melhor_solucao = solucao_atual[:]  # Inicialmente, a melhor solução é a atual
+    menor_custo = custo_atual
+    temperatura = temperatura_inicial  # Define a temperatura inicial
 
-    for _ in range(num_iterations):  # Loop de iterações
-        new_solution = perturb_solution(current_solution)  # Gera uma solução vizinha
-        new_cost = total_distance(new_solution, cities)  # Calcula o custo da nova solução
+    for _ in range(iteracoes):  # Loop de iterações
+        nova_solucao = perturbar_solucao(solucao_atual)  # Gera uma solução vizinha
+        novo_custo = calcular_distancia_total(nova_solucao, cidades)  # Calcula o custo da nova solução
 
         # Se a nova solução for melhor ou for aceita pela função de aceitação, a adotamos
-        if acceptance_probability(current_cost, new_cost, temperature) > random.random():
-            current_solution = new_solution  # Atualiza a solução atual
-            current_cost = new_cost  # Atualiza o custo atual
+        if probabilidade_aceitacao(custo_atual, novo_custo, temperatura) > random.random():
+            solucao_atual = nova_solucao  # Atualiza a solução atual
+            custo_atual = novo_custo  # Atualiza o custo atual
 
             # Se a nova solução é a melhor que já encontramos, atualizamos a melhor solução
-            if current_cost < best_cost:
-                best_solution = current_solution[:]
-                best_cost = current_cost
+            if custo_atual < menor_custo:
+                melhor_solucao = solucao_atual[:]
+                menor_custo = custo_atual
 
-        temperature *= cooling_rate  # Diminui a temperatura conforme a taxa de resfriamento
+        temperatura *= taxa_resfriamento  # Diminui a temperatura conforme a taxa de resfriamento
 
-    return best_solution, best_cost  # Retorna a melhor solução e seu custo
+    return melhor_solucao, menor_custo  # Retorna a melhor solução e seu custo
 
 # Criar uma instância com 10 cidades com coordenadas aleatórias
-num_cities = 10
-cities = [(random.uniform(0, 100), random.uniform(0, 100)) for _ in range(num_cities)]
+numero_cidades = 10
+cidades = [(random.uniform(0, 100), random.uniform(0, 100)) for _ in range(numero_cidades)]
 
 # Definir os parâmetros do Simulated Annealing
-initial_temp = 1000  # Temperatura inicial
-cooling_rate = 0.99  # Taxa de resfriamento (cooling)
-num_iterations = 10000  # Número de iterações
+temperatura_inicial = 1000  # Temperatura inicial
+taxa_resfriamento = 0.99  # Taxa de resfriamento (cooling)
+iteracoes = 10000  # Número de iterações
 
 # Executar o algoritmo Simulated Annealing
-best_route, best_cost = simulated_annealing(cities, initial_temp, cooling_rate, num_iterations)
+melhor_rota, menor_distancia = caixeiro_viajante_sa(cidades, temperatura_inicial, taxa_resfriamento, iteracoes)
 
 # Exibir os resultados
-print(f"Melhor rota encontrada: {best_route}")
-print(f"Menor distância obtida: {best_cost:.2f}")
+print(f"Melhor rota encontrada: {melhor_rota}")
+print(f"Menor distância obtida: {menor_distancia:.2f}")
