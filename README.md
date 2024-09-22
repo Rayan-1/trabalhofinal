@@ -124,3 +124,6 @@ Ao final, a melhor rota encontrada e a distância mínima obtida são exibidas.
 print(f"Melhor rota encontrada: {melhor_rota}")
 print(f"Menor distância obtida: {menor_distancia:.2f}")
 ```
+### 10. Exemplo de Resultados
+![image](https://github.com/user-attachments/assets/ebbf7c36-78f8-40dc-b0b5-f803e3f88c90)
+
